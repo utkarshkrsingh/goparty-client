@@ -1,0 +1,105 @@
+@import url('https://fonts.googleapis.com/css2?family=Mozilla+Headline:wght@200..700&display=swap');
+
+* {
+    font-family: "Mozilla Headline";
+}
+
+#root {
+    margin: 0 auto;
+    background-image: url("./assets/background.svg");
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    width: 100vw;
+    height: 100vh;
+    position: relative;
+}
+
+.container {
+    height: 20rem;
+    width: 30rem;
+    background-color: rgba(255, 255, 255, 0.2);
+    border-radius: 10px;
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+    padding: 50px;
+
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.heading {
+    font-weight: 300;
+    font-size: 72px;
+    margin: 0 0 30px 0;
+}
+
+.heading span {
+    font-weight: 900;
+}
+
+.button {
+    font-size: 32px;
+    background-color: rgba(0, 0, 0, 0.2);
+    border-radius: 10px;
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(0, 0, 0, 0.3);
+    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+    width: 100%;
+    margin: 5px 0 5px 0;
+    transition: all ease-in-out 0.2s;
+}
+
+.button:hover {
+    transform: scale(1.05);
+}
+
+.button:active {
+    background-color: rgba(0, 0, 0, 0.4);
+}
+
+.footer-container {
+    position: fixed;
+    width: 100%;
+    bottom: 0;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
+
+.copyright {
+    padding-left: 20px;
+    transition: all ease-in-out 0.2s;
+}
+
+.copyright:hover {
+    transform: scale(1.05);
+}
+
+.copyright a {
+    text-decoration: none;
+    color: deepskyblue;
+}
+
+.poweredBy {
+    padding-right: 20px;
+    transition: all ease-in-out 0.2s;
+}
+
+.poweredBy:hover {
+    transform: scale(1.05);
+}
+
+
+.poweredBy a {
+    text-decoration: none;
+    color: deepskyblue;
+}
