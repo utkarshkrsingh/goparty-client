@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { useTheme } from "./theme-context";
-import { FiMail, FiLock } from 'react-icons/fi';
+import { FiMail, FiLock, FiEyeOff, FiEye } from 'react-icons/fi';
 import { useAuth } from "./AuthContext";  // ✅ import useAuth
 
 type PageProps = {
@@ -12,6 +12,11 @@ export default function LoginForm({ setView }: PageProps) {
     const [password, setPassword] = useState('');
     const { darkMode } = useTheme();
     const { refreshUser } = useAuth();  // ✅ get refreshUser
+    const [showPassword, setShowPassword] = useState(false);
+
+    const toggleShowPassword = () => {
+        setShowPassword((prev) => !prev);
+    }
 
     const handleLogin = async (e: React.FormEvent) => {
         e.preventDefault();
@@ -62,13 +67,19 @@ export default function LoginForm({ setView }: PageProps) {
                 <div className="relative">
                     <FiLock className={`absolute left-3 top-1/2 -translate-y-1/2 ${darkMode ? "text-gray-500" : "text-gray-400"}`} />
                     <input
-                        type="password"
+                        type={showPassword ? "text" : "password"}
                         value={password}
                         onChange={(e) => setPassword(e.target.value)}
                         placeholder="Password"
                         className={`w-full border ${darkMode ? "bg-gray-800 border-gray-700 focus:border-cyan-500 text-white focus:ring-cyan-500/50" : "bg-gray-100 border-gray-300 focus:border-blue-500 text-gray-900 focus:ring-blue-500/50"} placeholder-gray-500 rounded-lg pl-10 pr-4 py-3 focus:outline-none focus:ring-2`}
                         required
                     />
+                    <div
+                        className={`absolute right-3 top-1/2 -translate-y-1/2 cursor-pointer ${darkMode ? "text-gray-500" : "text-gray-400"}`}
+                        onClick={toggleShowPassword}
+                    >
+                        {showPassword ? <FiEyeOff /> : <FiEye />}
+                    </div>
                 </div>
                 <button
                     type="submit"

@@ -6,12 +6,12 @@ import LoginForm from './Login';
 import SignUpForm from './SignUp';
 import JoinRoom from './RoomForm';
 import './App.css';
-import { useAuth } from './AuthContext';  // ✅ import hook
+import { useAuth } from './AuthContext';
 
 export default function App() {
     const [view, setView] = useState<'home' | 'login' | 'signup' | 'joinRoom'>('home');
     const { darkMode, toggleDarkMode } = useTheme();
-    const { user, loading, logout } = useAuth();  // ✅ get user from context
+    const { user, loading, logout } = useAuth();
 
     const renderView = () => {
         switch (view) {
