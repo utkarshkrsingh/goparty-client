@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { useTheme } from "./theme-context";
 import { FiMail, FiLock } from 'react-icons/fi';
+import { useAuth } from "./AuthContext";  // ✅ import useAuth
 
 type PageProps = {
     setView: (view: 'home' | 'login' | 'signup') => void
@@ -9,14 +10,39 @@ type PageProps = {
 export default function LoginForm({ setView }: PageProps) {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
-
-    const handleLogin = (e: React.FormEvent) => {
-        e.preventDefault();
-        console.log('Logging in with: ', { email, password });
-        alert('Login successful! (placeholder)');
-    };
-
     const { darkMode } = useTheme();
+    const { refreshUser } = useAuth();  // ✅ get refreshUser
+
+    const handleLogin = async (e: React.FormEvent) => {
+        e.preventDefault();
+
+        try {
+            const res = await fetch("http://localhost:8080/login", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                credentials: "include",
+                body: JSON.stringify({ email, password }),
+            });
+
+            if (!res.ok) {
+                const errorData = await res.json();
+                alert("Login failed: " + (errorData.error || "Unknown error"));
+                return;
+            }
+
+            // ✅ Refresh user context so App knows immediately
+            await refreshUser();
+
+            // Switch view to home after login
+            setView("home");
+
+        } catch (err) {
+            console.error("Login request failed: ", err);
+            alert("Something went wrong. Please try again.")
+        }
+    };
 
     return (
         <div className={`w-full max-w-sm text-center animate-fade-in ${darkMode ? "bg-gray-900 border-gray-800" : "bg-white border-gray-200"} p-8 rounded-xl shadow-2xl border`}>
@@ -51,15 +77,6 @@ export default function LoginForm({ setView }: PageProps) {
                     Log In
                 </button>
             </form>
-            <p className={`mt-6 ${darkMode ? "text-gray-400" : "text-gray-600"}`}>
-                Don't have an account?{' '}
-                <button
-                    onClick={() => setView('signup')}
-                    className={`cursor-pointer font-semibold ${darkMode ? "text-cyan-400" : "text-blue-600"} hover:underline`}
-                >
-                    Sign Up
-                </button>
-            </p>
         </div>
     );
 };

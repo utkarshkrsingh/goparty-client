@@ -5,10 +5,13 @@ import HeroSection from './HeroSection';
 import LoginForm from './Login';
 import SignUpForm from './SignUp';
 import JoinRoom from './RoomForm';
-import './App.css'
+import './App.css';
+import { useAuth } from './AuthContext';  // ✅ import hook
 
 export default function App() {
     const [view, setView] = useState<'home' | 'login' | 'signup' | 'joinRoom'>('home');
+    const { darkMode, toggleDarkMode } = useTheme();
+    const { user, loading, logout } = useAuth();  // ✅ get user from context
 
     const renderView = () => {
         switch (view) {
@@ -24,22 +27,8 @@ export default function App() {
         }
     };
 
-    const { darkMode, toggleDarkMode } = useTheme();
-
     return (
         <div className={`${darkMode ? "bg-gray-900" : "bg-gray-50"} min-h-screen flex flex-col font-sans`}>
-            <style>{`
-        @keyframes fade-in {
-          from { opacity: 0; transform: translateY(-10px); }
-          to { opacity: 1; transform: translateY(0); }
-        }
-        .animate-fade-in {
-          animation: fade-in 0.5s ease-out forwards;
-        }
-        body {
-          background-color: #F9FAFB;
-        }
-      `}</style>
             <header className={`top-0 z-10 w-full flex flex-row justify-between py-5 px-15 border-b ${darkMode ? "border-gray-800" : "border-gray-200"}`}>
                 <h1
                     onClick={() => setView('home')}
@@ -48,16 +37,33 @@ export default function App() {
                     GoParty
                 </h1>
                 <nav className="flex items-center space-x-2 md:space-x-4">
-                    <button
-                        onClick={() => setView('login')}
-                        className={`cursor-pointer font-sans ${darkMode ? "text-gray-300 hover:text-white" : "text-gray-600 hover:text-blue-600"} text-base px-3 py-2`}>
-                        Login
-                    </button>
-                    <button
-                        onClick={() => setView('signup')}
-                        className={`cursor-pointer ${darkMode ? "bg-cyan-500 hover:bg-cyan-600" : "bg-blue-600 hover:bg-blue-700"} text-white font-sans font-bold py-3 px-5 rounded-lg text-base`}>
-                        Sign Up
-                    </button>
+                    {loading ? (
+                        <span className={`${darkMode ? "text-gray-400" : "text-gray-600"}`}>Loading...</span>
+                    ) : user ? (
+                        <>
+                            <span className={`cursor-pointer font-sans ${darkMode ? "text-gray-300 hover:text-white" : "text-gray-600 hover:text-blue-600"} text-base px-3 py-2`}>
+                                😄 {user.username}
+                            </span>
+                            <button
+                                onClick={logout}
+                                className={`cursor-pointer ${darkMode ? "bg-cyan-500 hover:bg-cyan-600" : "bg-blue-600 hover:bg-blue-700"} text-white font-sans font-bold py-3 px-5 rounded-lg text-base`}>
+                                Logout
+                            </button>
+                        </>
+                    ) : (
+                        <>
+                            <button
+                                onClick={() => setView('login')}
+                                className={`cursor-pointer font-sans ${darkMode ? "text-gray-300 hover:text-white" : "text-gray-600 hover:text-blue-600"} text-base px-3 py-2`}>
+                                Login
+                            </button>
+                            <button
+                                onClick={() => setView('signup')}
+                                className={`cursor-pointer ${darkMode ? "bg-cyan-500 hover:bg-cyan-600" : "bg-blue-600 hover:bg-blue-700"} text-white font-sans font-bold py-3 px-5 rounded-lg text-base`}>
+                                Sign Up
+                            </button>
+                        </>
+                    )}
                     <button
                         onClick={toggleDarkMode}
                         className={`cursor-pointer p-2 rounded-full ${darkMode ? "hover:bg-gray-800 hover:text-white" : "text-black hover:bg-gray-200"} ml-2`}
@@ -79,5 +85,5 @@ export default function App() {
                 </p>
             </footer>
         </div>
-    )
+    );
 }

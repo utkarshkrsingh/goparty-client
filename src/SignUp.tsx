@@ -11,10 +11,32 @@ export default function SignUpForm({ setView }: PageProps) {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
 
-    const handleSignUp = (e: React.FormEvent) => {
+    const handleSignUp = async (e: React.FormEvent) => {
         e.preventDefault();
-        console.log('Signing up with:', { username, email, password });
-        alert('Signup successful! (placeholder)');
+
+        try {
+            const response = await fetch("http://localhost:8080/signup", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({ username, email, password }),
+            });
+
+            if (!response.ok) {
+                const err = await response.json();
+                alert("Error " + (err.Error || "Signup Failed"));
+                return;
+            }
+
+            const data = await response.json()
+            console.log("Signup success: ", data);
+            alert("Signup successful")
+            setView("login");
+        } catch (error) {
+            console.log("Signup error: ", error);
+            alert("Something went wrong. Try again.");
+        }
     };
 
     const { darkMode } = useTheme();
@@ -43,7 +65,7 @@ export default function SignUpForm({ setView }: PageProps) {
                         type="email"
                         value={email}
                         onChange={(e) => setEmail(e.target.value)}
-                        placeholder="Password"
+                        placeholder="Email"
                         className={`w-full border ${darkMode ? "bg-gray-800 border-gray-700 focus:border-cyan-500 text-white focus:ring-cyan-500/50" : "bg-gray-100 border-gray-300 focus:border-blue-500 text-gray-900 focus:ring-blue-500/50"} placeholder-gray-500 rounded-lg pl-10 pr-4 py-3 focus:outline-none focus:ring-2`}
                         required
                     />
